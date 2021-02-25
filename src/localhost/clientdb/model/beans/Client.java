@@ -1,16 +1,18 @@
-package localhost.clientdb.beans;
+package localhost.clientdb.model.beans;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Client implements Serializable {
-    private int id, cep, cpf;
+    private int id;
     private String name,
             address,
             city,
-            uf,
+            state,
             email,
-            phone;
+            phone,
+            cep,
+            cpf;
 
     public int getId() {
         return id;
@@ -20,19 +22,19 @@ public class Client implements Serializable {
         this.id = id;
     }
 
-    public int getCep() {
+    public String getCep() {
         return cep;
     }
 
-    public void setCep(int cep) {
+    public void setCep(String cep) {
         this.cep = cep;
     }
 
-    public int getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(int cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -60,12 +62,12 @@ public class Client implements Serializable {
         this.city = city;
     }
 
-    public String getUf() {
-        return uf;
+    public String getState() {
+        return state;
     }
 
-    public void setUf(String uf) {
-        this.uf = uf;
+    public void setState(String uf) {
+        this.state = uf;
     }
 
     public String getEmail() {
@@ -91,27 +93,25 @@ public class Client implements Serializable {
         Client client = (Client) o;
         return id == client.id && cep == client.cep && cpf == client.cpf && Objects.equals(name, client.name) &&
                 Objects.equals(address, client.address) && Objects.equals(city, client.city) &&
-                Objects.equals(uf, client.uf) && Objects.equals(email, client.email) &&
+                Objects.equals(state, client.state) && Objects.equals(email, client.email) &&
                 Objects.equals(phone, client.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cep, cpf, name, address, city, uf, email, phone);
+        return Objects.hash(id, cep, cpf, name, address, city, state, email, phone);
     }
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", cep=" + cep +
-                ", cpf=" + cpf +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
-                ", uf='" + uf + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return this.getId() + "\t" +
+                this.getName() + "\t" +
+                this.getCpf() + "\t" +
+                this.getAddress() + "\t" +
+                this.getCep() + "\t" +
+                this.getCity() + "\t" +
+                this.getState() + "\t" +
+                this.getPhone() + "\t" +
+                this.getEmail();
     }
 }
