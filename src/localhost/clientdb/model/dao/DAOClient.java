@@ -15,13 +15,14 @@ public class DAOClient {
     private Connection con;
     PreparedStatement stmt;
     ResultSet rs;
+    String sql;
 
     public DAOClient(){
         this.con = new DBConnection().getConnection();
     }
 
     public void add(Client client){
-        String sql = "INSERT INTO clients (\"name\", cpf, address, cep, city, \"state\", " +
+        sql = "INSERT INTO clients (\"name\", cpf, address, cep, city, \"state\", " +
                 "phone, email) values (?,?,?,?,?,?,?,?)";
         try {
             int i = 0;
@@ -42,8 +43,8 @@ public class DAOClient {
         }
     }
 
-    public void change(Client client){
-        String sql = "UPDATE clients SET \"name\" = ?, cpf = ?, address = ?, cep = ?, " +
+    public void update(Client client){
+        sql = "UPDATE clients SET \"name\" = ?, cpf = ?, address = ?, cep = ?, " +
                 "city = ?, \"state\" = ?, phone = ?, email = ? where \"id\" = ?";
         try {
             int i = 0;
@@ -56,6 +57,7 @@ public class DAOClient {
             stmt.setString(++i, client.getState());
             stmt.setString(++i, client.getPhone());
             stmt.setString(++i, client.getEmail());
+            stmt.setInt(++i, client.getId());
             stmt.execute();
             stmt.close();
             con.close();
@@ -66,8 +68,9 @@ public class DAOClient {
     };
 
     public void delete(int id){
+        sql = "DELETE FROM clients WHERE \"id\" = ?";
         try {
-            stmt = con.prepareStatement("DELETE FROM clients WHERE \"id\" = ?");
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
             stmt.execute();
             stmt.close();
@@ -79,8 +82,9 @@ public class DAOClient {
 
     public List<Client> list(){
         List <Client> lst = new ArrayList<>();
+        sql = "Select * from clients";
         try {
-            stmt = con.prepareStatement("Select * from clients");
+            stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
 
             while (rs.next()){
@@ -104,4 +108,35 @@ public class DAOClient {
             throwables.printStackTrace();
         }
         return lst;};
+
+    public Client searchById(int id){
+        Client client = new Client();
+        sql = "SELECT * FROM clients WHERE \"id\" = ?";
+        try {
+            stmt = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+
+            client.setId(rs.getInt(1));
+            client.setName(rs.getString(2));
+            client.setCpf(rs.getString(3));
+            client.setAddress(rs.getString(4));
+            client.setCep(rs.getString(5));
+            client.setCity(rs.getString(6));
+            client.setState(rs.getString(7));
+            client.setPhone(rs.getString(8));
+            client.setEmail(rs.getString(9));
+
+            stmt.execute();
+            stmt.close();
+            rs.close();
+            con.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return client;
+
+    }
 }
