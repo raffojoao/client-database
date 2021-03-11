@@ -5,7 +5,7 @@ import localhost.clientdb.model.dao.DAOClient;
 
 import javax.swing.*;
 
-public class ChangeTest {
+public class UpdateTest {
     public static void main(String[] args) {
         Client c = new Client();
         c.setName("Ana Carolina");

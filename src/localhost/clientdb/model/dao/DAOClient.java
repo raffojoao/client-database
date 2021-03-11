@@ -4,6 +4,7 @@ import localhost.clientdb.model.beans.Client;
 import localhost.clientdb.util.DBConnection;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +66,7 @@ public class DAOClient {
             throwables.printStackTrace();
         }
 
-    };
+    }
 
     public void delete(int id){
         sql = "DELETE FROM clients WHERE \"id\" = ?";
@@ -78,7 +79,7 @@ public class DAOClient {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-    };
+    }
 
     public List<Client> list(){
         List <Client> lst = new ArrayList<>();
@@ -107,7 +108,7 @@ public class DAOClient {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return lst;};
+        return lst;}
 
     public Client searchById(int id){
         Client client = new Client();
@@ -134,9 +135,49 @@ public class DAOClient {
             con.close();
 
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Client not found",
+                    "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return client;
+
+    }
+
+    public List<Client> searchByName(String name){
+        Client client = new Client();
+        List <Client> lst = new ArrayList<>();
+        sql = "SELECT * FROM clients WHERE \"name\" like ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, '%' + name + '%');
+            rs = stmt.executeQuery();
+
+            while (rs.next()){
+                client.setId(rs.getInt(1));
+                client.setName(rs.getString(2));
+                client.setCpf(rs.getString(3));
+                client.setAddress(rs.getString(4));
+                client.setCep(rs.getString(5));
+                client.setCity(rs.getString(6));
+                client.setState(rs.getString(7));
+                client.setPhone(rs.getString(8));
+                client.setEmail(rs.getString(9));
+
+                lst.add(client);
+            }
+
+            stmt.execute();
+            stmt.close();
+            rs.close();
+            con.close();
+
+        } catch (SQLException throwables) {
+            JOptionPane.showMessageDialog(null, "Client not found",
+                    "ERROR",
+                    JOptionPane.ERROR_MESSAGE);
+            //throwables.printStackTrace();
+        }
+        return lst;
 
     }
 }
