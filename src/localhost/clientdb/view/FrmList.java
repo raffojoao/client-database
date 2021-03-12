@@ -1,9 +1,13 @@
 package localhost.clientdb.view;
 
+import localhost.clientdb.model.dao.DAOClient;
+import localhost.clientdb.util.GridModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
 public class FrmList extends JFrame{
     private JPanel contentPane;
@@ -22,10 +26,11 @@ public class FrmList extends JFrame{
 
     public FrmList(String title){
         super(title);
-        Window();
+        createWindow();
+//        createTable();
     }
 
-    public void Window(){
+    public void createWindow(){
 
         this.setContentPane(contentPane);
         this.pack();
@@ -33,7 +38,7 @@ public class FrmList extends JFrame{
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getSource());
+                System.out.println(e.getID());
             }
         };
         addButton.addActionListener(listener);
@@ -53,46 +58,24 @@ public class FrmList extends JFrame{
 
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
-        String[] columns = {"ID", "Name", "Phone", "E-mail"};
-        Object[][] data = {
-                {"1","João","99999999","joao@joao.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"2","Ana","888888","ana@ana.com"},
-                {"3","Luli","77777777","luli@cachorro.com.br"}
-        };
-        table1 = new JTable(data, columns);
+          tablePanel = new JPanel();
+          createTable();
+//        updateGrid();
+
+    }
+
+    private void createTable(){
+        table1 = new JTable();
         JScrollPane jScrollPane = new JScrollPane(table1);
-        tablePanel = new JPanel();
-        tablePanel.setLayout(new GridLayout(1,1));
         tablePanel.add(jScrollPane);
+        updateGrid();
+    }
+
+    private void updateGrid(){
+        ResultSet rs = new DAOClient().loadGrid();
+        table1.setModel(new GridModel(rs, new String[]{"ID", "Name", "CPF", "Address"
+        , "CEP", "City", "State", "Phone", "E-mail"}));
+        table1.setAutoResizeMode(1);
+//        table1.getCo
     }
 }

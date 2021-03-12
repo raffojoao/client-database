@@ -180,4 +180,15 @@ public class DAOClient {
         return lst;
 
     }
+
+    public ResultSet loadGrid(){
+        try {
+            stmt = con.prepareStatement("Select * from clients");
+            rs = stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+
+    }
 }
